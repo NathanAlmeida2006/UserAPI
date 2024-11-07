@@ -30,13 +30,13 @@ public interface UserService {
     List<UserDetailsDTO> getUsers();
 
     /**
-     * Retrieves a user by ID.
+     * Finds a user by ID and returns the details as a {@link UserDetailsDTO}.
      *
      * @param id the user ID
      * @return the user details as a {@link UserDetailsDTO}
      * @throws dev.nathan.user.service.exceptions.UserNotFoundException if the user is not found
      */
-    UserDetailsDTO getUserById(Long id);
+    UserDetailsDTO findUserById(Long id);
 
     /**
      * Updates an existing user based on provided data.

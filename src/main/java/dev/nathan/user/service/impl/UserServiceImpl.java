@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -59,15 +58,15 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Retrieves a user by its unique identifier.
+     * Finds a user by its unique identifier.
      *
      * @param id the unique identifier of the user
      * @return a {@link UserDetailsDTO} representing the user
      * @throws UserNotFoundException if no user is found with the provided id
      */
     @Override
-    public UserDetailsDTO getUserById(Long id) {
-        User user = findUserById(id);
+    public UserDetailsDTO findUserById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found"));
         return userDetailsDtoConverter.toDto(user);
     }
 
@@ -81,7 +80,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDTO updateUser(Long id, UpdateUserFormDTO updateUserFormDTO) {
-        User user = findUserById(id);
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found"));
         userUpdater.updateUser(user, updateUserFormDTO);
         user = userRepository.save(user);
         return userDtoConverter.toDto(user);
@@ -95,20 +94,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void deleteUser(Long id) {
-        User user = findUserById(id);
+        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found"));
         userRepository.delete(user);
-    }
-
-    /**
-     * Retrieves a user by its unique identifier.
-     * Throws {@link UserNotFoundException} if no user is found with the provided id.
-     *
-     * @param id the unique identifier of the user
-     * @return the user entity
-     * @throws UserNotFoundException if no user is found with the provided id
-     */
-    private User findUserById(Long id) {
-        Optional<User> optionalUser = userRepository.findById(id);
-        return optionalUser.orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
     }
 }
