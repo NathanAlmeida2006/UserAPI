@@ -8,11 +8,11 @@ import lombok.*;
  * This class is mapped to a table in the database and holds
  * all relevant user information.
  */
-@Entity
 @Data
+@Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class User {
 
     /**
@@ -35,7 +35,7 @@ public class User {
     private String email;
 
     /**
-     * User's CPF (Brazilian individual taxpayer registry identification).
+     * User's CPF (Brazilian individual taxpayer registry identificati on).
      */
     @Column(nullable = false, unique = true)
     private String cpf;
