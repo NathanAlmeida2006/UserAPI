@@ -1,0 +1,94 @@
+---
+config:
+  theme: base
+---
+classDiagram
+    class User {
+        -Long id
+        -String name
+        -String email 
+        -String cpf
+    }
+    class UserDTO {
+        -Long id
+        -String name
+        -String email
+        -String cpf
+    }
+    class UserDetailsDTO {
+        -Long id
+        -String name
+        -String email
+        -String cpf
+    }
+    class UserFormDTO {
+        -String name
+        -String email
+        -String cpf
+    }
+    class UpdateUserFormDTO {
+        -String name
+        -String email
+        -String cpf
+    }
+    class UserController {
+        -UserService userService
+        +createUser(UserFormDTO) ResponseEntity
+        +getAllUsers() ResponseEntity
+        +getUserById(Long) ResponseEntity
+        +updateUser(Long, UpdateUserFormDTO) ResponseEntity
+        +deleteUser(Long) ResponseEntity
+    }
+    class UserService {
+        <<interface>>
+        +createUser(UserFormDTO) UserDTO
+        +getUsers() List~UserDetailsDTO~
+        +findUserById(Long) UserDetailsDTO
+        +updateUser(Long, UpdateUserFormDTO) UserDTO
+        +deleteUser(Long) void
+    }
+    class UserServiceImpl {
+        -UserRepository userRepository
+        -UserDTOConverter userDtoConverter
+        -UserDetailsDTOConverter userDetailsDtoConverter
+        -UserFormDTOConverter userFormDtoConverter
+        -UserUpdater userUpdater
+        +createUser(UserFormDTO) UserDTO
+        +getUsers() List~UserDetailsDTO~
+        +findUserById(Long) UserDetailsDTO
+        +updateUser(Long, UpdateUserFormDTO) UserDTO
+        +deleteUser(Long) void
+    }
+    class UserRepository {
+    }
+    class UserConverter~T~ {
+        <<interface>>
+        +toEntity(T) User
+        +toDto(User) T
+    }
+    class UserDTOConverter {
+        +toEntity(UserDTO) User
+        +toDto(User) UserDTO
+    }
+    class UserDetailsDTOConverter {
+        +toEntity(UserDetailsDTO) User
+        +toDto(User) UserDetailsDTO
+    }
+    class UserFormDTOConverter {
+        +toEntity(UserFormDTO) User
+        +toDto(User) UserFormDTO
+    }
+    class UserUpdater {
+        +updateUser(User, UpdateUserFormDTO) void
+    }
+    UserController --> UserService : uses
+    UserServiceImpl ..|> UserService : implements
+    UserServiceImpl --> UserRepository : uses
+    UserServiceImpl --> UserDTOConverter : uses
+    UserServiceImpl --> UserDetailsDTOConverter : uses
+    UserServiceImpl --> UserFormDTOConverter : uses
+    UserServiceImpl --> UserUpdater : uses
+    UserDTOConverter ..|> UserConverter : implements
+    UserDetailsDTOConverter ..|> UserConverter : implements
+    UserFormDTOConverter ..|> UserConverter : implements
+    UserRepository --> User : manages
